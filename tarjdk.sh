@@ -26,8 +26,8 @@ findexec jdkout | xargs -- ./termux-elf-cleaner/termux-elf-cleaner
 
 fi
 
-sudo cp -R jre_override/lib/* jreout/lib/
-sudo cp -R jre_override/lib/* jdkout/jre/lib
+cp -Rf jre_override/lib/* jreout/lib/
+cp -Rf jre_override/lib/* jdkout/jre/lib
 
 cd jreout
 

@@ -41,13 +41,13 @@ if [[ "$BUILD_IOS" != "1" ]]; then
   ar cru dummy_libs/libthread_db.a
 else
   ln -s -f /opt/X11/include/X11 $ANDROID_INCLUDE/
-  platform_args="--with-toolchain-type=clang"
+  platform_args="--with-toolchain-type=clang SDKNAME=iphoneos"
   # --disable-precompiled-headers
   AUTOCONF_x11arg="--with-x=/opt/X11/include/X11 --prefix=/usr/lib"
-  sameflags="-arch arm64 -isysroot $thesysroot -miphoneos-version-min=12.0 -DHEADLESS=1 -I$PWD/ios-missing-include -Wno-implicit-function-declaration"
+  sameflags="-arch arm64 -isysroot $thesysroot -miphoneos-version-min=14.0 -DHEADLESS=1 -I$PWD/ios-missing-include -Wno-implicit-function-declaration"
   export CFLAGS+=" $sameflags"
   export CXXFLAGS="$sameflags"
-  export LDFLAGS+=" -miphoneos-version-min=12.0"
+  export LDFLAGS+=" -miphoneos-version-min=14.0"
 
   HOMEBREW_NO_AUTO_UPDATE=1 brew install ldid xquartz
 fi
@@ -60,8 +60,8 @@ ln -s -f $CUPS_DIR/cups $ANDROID_INCLUDE/
 cd openjdk
 
 # Apply patches
+git reset --hard
 if [[ "$BUILD_IOS" != "1" ]]; then
-  git reset --hard
   git apply --reject --whitespace=fix ../patches/jdk8u_android.diff || echo "git apply failed (universal patch set)"
   if [[ "$TARGET_JDK" != "aarch32" ]]; then
     git apply --reject --whitespace=fix ../patches/jdk8u_android_main.diff || echo "git apply failed (main non-universal patch set)"
@@ -71,6 +71,8 @@ if [[ "$BUILD_IOS" != "1" ]]; then
   if [[ "$TARGET_JDK" == "x86" ]]; then
     git apply --reject --whitespace=fix ../patches/jdk8u_android_page_trap_fix.diff || echo "git apply failed (x86 page trap fix)"
   fi
+else
+  git apply --reject --whitespace=fix ../patches/jdk8u_ios.diff || echo "git apply failed (ios patch set)"
 fi
 
 #   --with-extra-cxxflags="$CXXFLAGS -Dchar16_t=uint16_t -Dchar32_t=uint32_t" \
