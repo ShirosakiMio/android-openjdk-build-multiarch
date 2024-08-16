@@ -7,5 +7,5 @@ git clone --depth 1 https://github.com/corretto/corretto-8 openjdk
 else
 # Use aarch32 repo because it also has aarch64
 
-git clone --depth 1 https://github.com/openjdk/jdk8u openjdk
+git clone --depth 1 https://github.com/ShirosakiMio/jdk8u openjdk
 fi
